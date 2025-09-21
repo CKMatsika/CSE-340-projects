@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="450" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder image">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <g fill="#475569" font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="400" y="220" font-size="28" font-weight="700">Image Unavailable</text>
+    <text x="400" y="255" font-size="16">CSE Motors</text>
+  </g>
+</svg>

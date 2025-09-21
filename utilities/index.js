@@ -32,21 +32,27 @@ Util.buildClassificationGrid = async function(data){
   if(data.length > 0){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
+      const make = vehicle.inv_make || 'Unknown'
+      const model = vehicle.inv_model || 'Vehicle'
+      const thumb = vehicle.inv_thumbnail || '/images/placeholder.svg'
+      const priceText = Number.isFinite(Number(vehicle.inv_price))
+        ? new Intl.NumberFormat('en-US').format(Number(vehicle.inv_price))
+        : 'N/A'
+
       grid += '<li>'
       grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
+      + '" title="View ' + make + ' '+ model 
+      + ' details"><img src="' + thumb 
+      +'" alt="Image of '+ make + ' ' + model 
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
       grid += '<hr />'
       grid += '<h2>'
       grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      + make + ' ' + model + ' details">' 
+      + make + ' ' + model + '</a>'
       grid += '</h2>'
-      grid += '<span>$' 
-      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '<span>$' + priceText + '</span>'
       grid += '</div>'
       grid += '</li>'
     })
@@ -63,17 +69,23 @@ Util.buildClassificationGrid = async function(data){
 Util.buildVehicleDetail = async function(vehicle){
   if (!vehicle) return ""
   // Format price and miles
-  const price = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(vehicle.inv_price)
-  const miles = (vehicle.inv_miles !== undefined && vehicle.inv_miles !== null)
-    ? new Intl.NumberFormat('en-US').format(vehicle.inv_miles)
+  const price = Number.isFinite(Number(vehicle.inv_price))
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(vehicle.inv_price))
+    : 'N/A'
+  const miles = (vehicle.inv_miles !== undefined && vehicle.inv_miles !== null && Number.isFinite(Number(vehicle.inv_miles)))
+    ? new Intl.NumberFormat('en-US').format(Number(vehicle.inv_miles))
     : ""
+
+  const make = vehicle.inv_make || 'Unknown'
+  const model = vehicle.inv_model || 'Vehicle'
+  const img = vehicle.inv_image || '/images/placeholder.svg'
 
   let detail = '<div class="vehicle-detail">'
   detail +=   '<div class="vehicle-media">'
-  detail +=     '<img src="' + vehicle.inv_image + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model + '" />'
+  detail +=     '<img src="' + img + '" alt="Image of ' + make + ' ' + model + '" />'
   detail +=   '</div>'
   detail +=   '<div class="vehicle-info">'
-  detail +=     '<h2 class="vehicle-title">' + vehicle.inv_year + ' ' + vehicle.inv_make + ' ' + vehicle.inv_model + '</h2>'
+  detail +=     '<h2 class="vehicle-title">' + (vehicle.inv_year || '') + ' ' + make + ' ' + model + '</h2>'
   detail +=     '<p class="vehicle-price"><strong>Price:</strong> ' + price + '</p>'
   if (miles) {
     detail +=   '<p class="vehicle-miles"><strong>Mileage:</strong> ' + miles + ' miles</p>'
