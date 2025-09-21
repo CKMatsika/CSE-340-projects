@@ -35,6 +35,7 @@ async function getInventoryByClassificationId(classification_id) {
     return data.rows
   } catch (error) {
     console.error("getclassificationsbyid error " + error)
+    return []
   }
 }
 
@@ -64,6 +65,7 @@ async function getVehicleById(inv_id) {
     return data.rows[0]
   } catch (error) {
     console.error("getVehicleById error " + error)
+    return null
   }
 }
 
