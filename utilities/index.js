@@ -30,7 +30,7 @@ Util.getNav = async function (req, res, next) {
 Util.buildClassificationGrid = async function(data){
   // Normalize to array to avoid errors when data is undefined/null
   data = Array.isArray(data) ? data : []
-  let grid
+  let grid = ""
   if(data.length > 0){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
