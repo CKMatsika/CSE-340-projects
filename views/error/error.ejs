@@ -1,0 +1,12 @@
+<!-- Error View -->
+<section class="error-view" aria-label="Error">
+  <% if (title) { %>
+  <h1><%= title %></h1>
+  <% } else { %>
+  <h1>Error</h1>
+  <% } %>
+
+  <p class="error-status"><strong>Status:</strong> <%= typeof status !== 'undefined' ? status : 500 %></p>
+  <p class="error-message"><%= message || 'An unexpected error occurred.' %></p>
+  <p><a href="/" title="Go to Home">Return Home</a></p>
+</section>

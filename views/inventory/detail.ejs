@@ -1,0 +1,12 @@
+<!-- Vehicle Detail View -->
+<section class="vehicle-detail-view" aria-label="Vehicle Details">
+  <!-- Content Heading -->
+  <% if (title) { %>
+  <h1><%= title %></h1>
+  <% } else { res.redirect('/') } %>
+
+  <!-- Detail Content -->
+  <div class="vehicle-detail-container">
+    <%- detail %>
+  </div>
+</section>
