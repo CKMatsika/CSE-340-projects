@@ -7,16 +7,24 @@ require("dotenv").config()
  * If - else will make determination which to use
  * *************** */
 let pool
-if (process.env.NODE_ENV == "development") {
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  })
+const env = (process.env.NODE_ENV || "").replace(/['"]/g, "").toLowerCase()
+const needsSSL =
+  env === "development" ||
+  process.env.DATABASE_SSL === "true" ||
+  (process.env.DATABASE_URL || "").includes("render.com")
 
-  // Added for troubleshooting queries
-  // during development
+const poolConfig = {
+  connectionString: process.env.DATABASE_URL,
+}
+
+if (needsSSL) {
+  poolConfig.ssl = { rejectUnauthorized: false }
+}
+
+pool = new Pool(poolConfig)
+
+if (env === "development") {
+  // Added for troubleshooting queries during development
   module.exports = {
     async query(text, params) {
       try {
@@ -24,14 +32,11 @@ if (process.env.NODE_ENV == "development") {
         console.log("executed query", { text })
         return res
       } catch (error) {
-        console.error("error in query", { text })
+        console.error("error in query", { text, error: error.message })
         throw error
       }
     },
   }
 } else {
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-  })
   module.exports = pool
 }
