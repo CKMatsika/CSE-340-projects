@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: cse340-app
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    port: 10000
+    plan: free
+    autoDeploy: false
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        generateValue: true
+      - key: HOST
+        value: 0.0.0.0
