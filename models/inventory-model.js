@@ -97,35 +97,21 @@ async function getInventoryByClassificationId(classification_id) {
 }
 
 /* *****************************
-*   Get inventory item by ID
+*   Get inventory item by make, model, year (composite key)
 * *************************** */
-async function getInventoryById(inv_id) {
+async function getInventoryByCompositeKey(inv_make, inv_model, inv_year) {
     try {
-        // Try with inv_id first, if that fails, try with id
-        let data = await pool.query(
+        const data = await pool.query(
             `SELECT i.*, c.classification_name
             FROM inventory AS i
             JOIN classification AS c ON i.classification_id = c.classification_id
-            WHERE i.inv_id = $1`,
-            [inv_id]
+            WHERE i.inv_make = $1 AND i.inv_model = $2 AND i.inv_year = $3`,
+            [inv_make, inv_model, inv_year]
         )
         return data.rows[0]
     } catch (error) {
-        // If inv_id doesn't exist, try with id column
-        try {
-            const data = await pool.query(
-                `SELECT i.*, c.classification_name
-                FROM inventory AS i
-                JOIN classification AS c ON i.classification_id = c.classification_id
-                WHERE i.id = $1`,
-                [inv_id]
-            )
-            return data.rows[0]
-        } catch (secondError) {
-            console.error("getInventoryById error: " + error)
-            console.error("Also tried with id column: " + secondError)
-            throw error
-        }
+        console.error("getInventoryByCompositeKey error: " + error)
+        throw error
     }
 }
 
@@ -134,5 +120,6 @@ module.exports = {
     addInventory,
     getClassifications,
     getInventoryByClassificationId,
-    getInventoryById
+    getInventoryById,
+    getInventoryByCompositeKey
 }

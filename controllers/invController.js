@@ -20,19 +20,27 @@ invCont.buildByClassificationId = async function (req, res, next) {
 }
 
 /* ***************************
- *  Build inventory detail view by inventory id
+ *  Build inventory detail view by make, model, year
  * ************************** */
-invCont.buildByInvId = async function (req, res, next) {
-    const inv_id = req.params.invId
-    const data = await invModel.getInventoryById(inv_id)
-    const detail = await utilities.buildVehicleDetail(data)
-    let nav = await utilities.getNav()
-    const vehicleName = `${data.inv_year} ${data.inv_make} ${data.inv_model}`
-    res.render("./inventory/detail", {
-        title: vehicleName,
-        nav,
-        detail,
-    })
+invCont.buildByCompositeKey = async function (req, res, next) {
+    const inv_make = req.params.invMake
+    const inv_model = req.params.invModel
+    const inv_year = req.params.invYear
+
+    try {
+        const data = await invModel.getInventoryByCompositeKey(inv_make, inv_model, inv_year)
+        const detail = await utilities.buildVehicleDetail(data)
+        let nav = await utilities.getNav()
+        const vehicleName = `${data.inv_year} ${data.inv_make} ${data.inv_model}`
+        res.render("./inventory/detail", {
+            title: vehicleName,
+            nav,
+            detail,
+        })
+    } catch (error) {
+        console.error("Error building vehicle detail:", error)
+        res.redirect("/inv/type/1") // Redirect to first classification if vehicle not found
+    }
 }
 
 /* ***************************
