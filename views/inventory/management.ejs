@@ -1,0 +1,95 @@
+<!-- Inventory Management View -->
+<section class="inventory-management" aria-label="Inventory Management">
+  <!-- Content Heading -->
+  <% if (title) { %>
+  <h1><%= title %></h1>
+  <% } %>
+
+  <!-- Message Block -->
+  <% if (messages && messages.notice) { %>
+  <div class="message success">
+    <%= messages.notice %>
+  </div>
+  <% } %>
+
+  <!-- Management Links -->
+  <div class="management-links">
+    <div class="link-card">
+      <h2>Add New Classification</h2>
+      <p>Create a new vehicle classification category.</p>
+      <a href="/inv/add-classification" class="btn btn-primary">Add Classification</a>
+    </div>
+
+    <div class="link-card">
+      <h2>Add New Vehicle</h2>
+      <p>Add a new vehicle to the inventory.</p>
+      <a href="/inv/add-inventory" class="btn btn-secondary">Add Vehicle</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .management-links {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .link-card {
+    flex: 1;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+
+  .link-card h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .link-card p {
+    margin-bottom: 1.5rem;
+    color: #666;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+
+  .message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+  }
+
+  .message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+</style>

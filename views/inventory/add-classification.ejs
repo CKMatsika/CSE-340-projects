@@ -1,0 +1,183 @@
+<!-- Add Classification View -->
+<section class="add-classification" aria-label="Add New Classification">
+  <!-- Content Heading -->
+  <% if (title) { %>
+  <h1><%= title %></h1>
+  <% } %>
+
+  <!-- Message Block -->
+  <% if (messages && messages.notice) { %>
+  <div class="message <%= messages.notice.includes('error') ? 'error' : 'success' %>">
+    <%= messages.notice %>
+  </div>
+  <% } %>
+
+  <!-- Error List -->
+  <% if (errors && errors.length > 0) { %>
+  <div class="error-list">
+    <h2>Please correct the following errors:</h2>
+    <ul>
+      <% errors.forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+  <% } %>
+
+  <!-- Form -->
+  <form id="classificationForm" action="/inv/add-classification" method="post" novalidate>
+    <div class="form-group">
+      <label for="classificationName">Classification Name:</label>
+      <input
+        type="text"
+        id="classificationName"
+        name="classification_name"
+        value="<%= classification_name || '' %>"
+        required
+        pattern="^[a-zA-Z0-9]+$"
+        title="Classification name cannot contain spaces or special characters"
+      >
+      <small>Classification name cannot contain spaces or special characters</small>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Add Classification</button>
+      <a href="/inv/" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<script>
+  document.getElementById('classificationForm').addEventListener('submit', function(e) {
+    const classificationName = document.getElementById('classificationName');
+    const pattern = /^[a-zA-Z0-9]+$/;
+
+    // Clear previous errors
+    classificationName.classList.remove('error');
+
+    // Client-side validation
+    if (!classificationName.value.trim()) {
+      e.preventDefault();
+      classificationName.classList.add('error');
+      alert('Classification name is required');
+      return false;
+    }
+
+    if (!pattern.test(classificationName.value)) {
+      e.preventDefault();
+      classificationName.classList.add('error');
+      alert('Classification name cannot contain spaces or special characters');
+      return false;
+    }
+
+    if (classificationName.value.length < 2) {
+      e.preventDefault();
+      classificationName.classList.add('error');
+      alert('Classification name must be at least 2 characters long');
+      return false;
+    }
+
+    return true;
+  });
+</script>
+
+<style>
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  input.error {
+    border-color: #dc3545;
+  }
+
+  small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #666;
+    font-size: 0.875rem;
+  }
+
+  .form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+
+  .message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+  }
+
+  .message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .error-list {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+  }
+
+  .error-list ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .error-list li {
+    margin-bottom: 0.5rem;
+  }
+</style>

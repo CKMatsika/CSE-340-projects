@@ -1,0 +1,29 @@
+{
+  "name": "cse340-project",
+  "version": "1.0.0",
+  "description": "CSE 340 Vehicle Inventory Management System",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "ejs": "^3.1.10",
+    "express-ejs-layouts": "^2.5.1",
+    "pg": "^8.13.1",
+    "connect-pg-simple": "^9.0.1",
+    "express-session": "^1.18.1",
+    "connect-flash": "^0.1.1",
+    "express-messages": "^1.0.0",
+    "body-parser": "^1.20.3",
+    "express-validator": "^7.2.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "keywords": ["nodejs", "express", "ejs", "postgresql"],
+  "author": "Your Name",
+  "license": "ISC"
+}

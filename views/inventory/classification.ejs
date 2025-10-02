@@ -1,0 +1,17 @@
+<!-- Inventory by classification view -->
+<section class="inventory-classification" aria-label="Inventory By Classification">
+  <!-- Content Heading -->
+  <% if (title) { %>
+  <h1><%= title %></h1>
+  <% } else {
+    res.redirect('/')
+  } %>
+
+  <!-- Message Block (will be enabled later) -->
+  <%# messages() %>
+
+  <!-- Inventory Items Display -->
+  <div class="inventory-grid">
+    <%- grid %>
+  </div>
+</section>

@@ -1,0 +1,324 @@
+<!-- Add Inventory View -->
+<section class="add-inventory" aria-label="Add New Vehicle">
+  <!-- Content Heading -->
+  <% if (title) { %>
+  <h1><%= title %></h1>
+  <% } %>
+
+  <!-- Message Block -->
+  <% if (messages && messages.notice) { %>
+  <div class="message <%= messages.notice.includes('error') ? 'error' : 'success' %>">
+    <%= messages.notice %>
+  </div>
+  <% } %>
+
+  <!-- Error List -->
+  <% if (errors && errors.length > 0) { %>
+  <div class="error-list">
+    <h2>Please correct the following errors:</h2>
+    <ul>
+      <% errors.forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+  <% } %>
+
+  <!-- Form -->
+  <form id="inventoryForm" action="/inv/add-inventory" method="post" novalidate>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="classificationList">Classification:</label>
+        <%- classificationList %>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="invMake">Make:</label>
+        <input
+          type="text"
+          id="invMake"
+          name="inv_make"
+          value="<%= inv_make || '' %>"
+          required
+          maxlength="50"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="invModel">Model:</label>
+        <input
+          type="text"
+          id="invModel"
+          name="inv_model"
+          value="<%= inv_model || '' %>"
+          required
+          maxlength="50"
+        >
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="invYear">Year:</label>
+        <input
+          type="number"
+          id="invYear"
+          name="inv_year"
+          value="<%= inv_year || '' %>"
+          required
+          min="1900"
+          max="<%= new Date().getFullYear() + 1 %>"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="invColor">Color:</label>
+        <input
+          type="text"
+          id="invColor"
+          name="inv_color"
+          value="<%= inv_color || '' %>"
+          maxlength="50"
+        >
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="invPrice">Price:</label>
+        <input
+          type="number"
+          id="invPrice"
+          name="inv_price"
+          value="<%= inv_price || '' %>"
+          required
+          min="0"
+          step="0.01"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="invMiles">Mileage:</label>
+        <input
+          type="number"
+          id="invMiles"
+          name="inv_miles"
+          value="<%= inv_miles || '' %>"
+          min="0"
+        >
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="invDescription">Description:</label>
+      <textarea
+        id="invDescription"
+        name="inv_description"
+        rows="4"
+        maxlength="500"
+      ><%= inv_description || '' %></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="invImage">Image Path:</label>
+        <input
+          type="text"
+          id="invImage"
+          name="inv_image"
+          value="<%= inv_image || '/images/vehicles/no-image.png' %>"
+          maxlength="255"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="invThumbnail">Thumbnail Path:</label>
+        <input
+          type="text"
+          id="invThumbnail"
+          name="inv_thumbnail"
+          value="<%= inv_thumbnail || '/images/vehicles/no-image-tn.png' %>"
+          maxlength="255"
+        >
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Add Vehicle</button>
+      <a href="/inv/" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<script>
+  document.getElementById('inventoryForm').addEventListener('submit', function(e) {
+    const form = this;
+    const requiredFields = form.querySelectorAll('[required]');
+    let hasErrors = false;
+
+    // Clear previous errors
+    form.querySelectorAll('.form-group').forEach(group => {
+      group.classList.remove('error');
+    });
+
+    // Validate required fields
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        e.preventDefault();
+        field.closest('.form-group').classList.add('error');
+        hasErrors = true;
+      }
+    });
+
+    // Validate year
+    const yearField = document.getElementById('invYear');
+    const currentYear = new Date().getFullYear();
+    if (yearField.value && (yearField.value < 1900 || yearField.value > currentYear + 1)) {
+      e.preventDefault();
+      yearField.closest('.form-group').classList.add('error');
+      hasErrors = true;
+    }
+
+    // Validate price
+    const priceField = document.getElementById('invPrice');
+    if (priceField.value && priceField.value < 0) {
+      e.preventDefault();
+      priceField.closest('.form-group').classList.add('error');
+      hasErrors = true;
+    }
+
+    // Validate mileage
+    const milesField = document.getElementById('invMiles');
+    if (milesField.value && milesField.value < 0) {
+      e.preventDefault();
+      milesField.closest('.form-group').classList.add('error');
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      alert('Please correct the errors in the form');
+      return false;
+    }
+
+    return true;
+  });
+</script>
+
+<style>
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-row .form-group {
+    flex: 1;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  .form-group.error input,
+  .form-group.error select,
+  .form-group.error textarea {
+    border-color: #dc3545;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+
+  .message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+  }
+
+  .message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .error-list {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+  }
+
+  .error-list ul {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .error-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+    }
+  }
+</style>
