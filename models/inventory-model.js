@@ -83,7 +83,8 @@ async function getClassifications(){
 async function getInventoryByClassificationId(classification_id) {
     try {
         const data = await pool.query(
-            `SELECT * FROM inventory AS i
+            `SELECT i.*, c.classification_name
+            FROM inventory AS i
             JOIN classification AS c ON i.classification_id = c.classification_id
             WHERE i.classification_id = $1`,
             [classification_id]
@@ -101,9 +102,10 @@ async function getInventoryByClassificationId(classification_id) {
 async function getInventoryById(inv_id) {
     try {
         const data = await pool.query(
-            `SELECT * FROM inventory AS i
+            `SELECT i.*, c.classification_name
+            FROM inventory AS i
             JOIN classification AS c ON i.classification_id = c.classification_id
-            WHERE i.inv_id = $1`,
+            WHERE i.id = $1`,
             [inv_id]
         )
         return data.rows[0]
