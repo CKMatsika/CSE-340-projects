@@ -105,7 +105,7 @@ async function getInventoryById(inv_id) {
             `SELECT i.*, c.classification_name
             FROM inventory AS i
             JOIN classification AS c ON i.classification_id = c.classification_id
-            WHERE i.id = $1`,
+            WHERE i.inv_id = $1`,
             [inv_id]
         )
         return data.rows[0]
