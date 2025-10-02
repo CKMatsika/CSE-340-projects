@@ -101,7 +101,8 @@ async function getInventoryByClassificationId(classification_id) {
 * *************************** */
 async function getInventoryById(inv_id) {
     try {
-        const data = await pool.query(
+        // Try with inv_id first, if that fails, try with id
+        let data = await pool.query(
             `SELECT i.*, c.classification_name
             FROM inventory AS i
             JOIN classification AS c ON i.classification_id = c.classification_id
@@ -110,8 +111,21 @@ async function getInventoryById(inv_id) {
         )
         return data.rows[0]
     } catch (error) {
-        console.error("getInventoryById error: " + error)
-        throw error
+        // If inv_id doesn't exist, try with id column
+        try {
+            const data = await pool.query(
+                `SELECT i.*, c.classification_name
+                FROM inventory AS i
+                JOIN classification AS c ON i.classification_id = c.classification_id
+                WHERE i.id = $1`,
+                [inv_id]
+            )
+            return data.rows[0]
+        } catch (secondError) {
+            console.error("getInventoryById error: " + error)
+            console.error("Also tried with id column: " + secondError)
+            throw error
+        }
     }
 }
 

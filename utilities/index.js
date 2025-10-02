@@ -33,7 +33,7 @@ Util.buildClassificationGrid = async function(data){
   let grid = ""
   if(data.length > 0){
     grid = '<ul id="inv-display">'
-    data.forEach(vehicle => { 
+    data.forEach(vehicle => {
       const make = vehicle.inv_make || 'Unknown'
       const model = vehicle.inv_model || 'Vehicle'
       const thumb = vehicle.inv_thumbnail || '/images/placeholder.svg'
@@ -42,16 +42,16 @@ Util.buildClassificationGrid = async function(data){
         : 'N/A'
 
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + make + ' '+ model 
-      + ' details"><img src="' + thumb 
-      +'" alt="Image of '+ make + ' ' + model 
+      grid +=  '<a href="../../inv/detail/'+ (vehicle.inv_id || vehicle.id)
+      + '" title="View ' + make + ' '+ model
+      + ' details"><img src="' + thumb
+      +'" alt="Image of '+ make + ' ' + model
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
       grid += '<hr />'
       grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + make + ' ' + model + ' details">' 
+      grid += '<a href="../../inv/detail/' + (vehicle.inv_id || vehicle.id) +'" title="View '
+      + make + ' ' + model + ' details">'
       + make + ' ' + model + '</a>'
       grid += '</h2>'
       grid += '<span>$' + priceText + '</span>'
@@ -59,7 +59,7 @@ Util.buildClassificationGrid = async function(data){
       grid += '</li>'
     })
     grid += '</ul>'
-  } else { 
+  } else {
     grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
