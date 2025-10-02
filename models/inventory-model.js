@@ -59,39 +59,6 @@ async function addInventory(
         const result = await pool.query(sql, params)
         return result.rows[0]
     } catch (error) {
-        console.error("model error: " + error)
-        throw error
-    }
-}
-
-/* *****************************
-*   Get all classifications
-* *************************** */
-async function getClassifications(){
-    try {
-        const result = await pool.query("SELECT * FROM classification ORDER BY classification_name")
-        return result
-    } catch (error) {
-        console.error("model error: " + error)
-        throw error
-    }
-}
-
-/* *****************************
-*   Get inventory by classification ID
-* *************************** */
-async function getInventoryByClassificationId(classification_id) {
-    try {
-        const data = await pool.query(
-            `SELECT i.*, c.classification_name
-            FROM inventory AS i
-            JOIN classification AS c ON i.classification_id = c.classification_id
-            WHERE i.classification_id = $1`,
-            [classification_id]
-        )
-        return data
-    } catch (error) {
-        console.error("getInventoryByClassificationId error: " + error)
         throw error
     }
 }
@@ -120,6 +87,5 @@ module.exports = {
     addInventory,
     getClassifications,
     getInventoryByClassificationId,
-    getInventoryById,
     getInventoryByCompositeKey
 }
