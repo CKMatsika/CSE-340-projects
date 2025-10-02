@@ -4,6 +4,9 @@ const router = new express.Router()
 const invController = require("../controllers/invController")
 const validation = require("../utilities/validation")
 
+// Route to build inventory detail view by inventory id
+router.get("/detail/:invId", invController.buildByInvId)
+
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId)
 
