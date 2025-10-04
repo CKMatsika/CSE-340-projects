@@ -81,6 +81,87 @@ validation.inventoryRules = () => {
 }
 
 /* ******************************
+ * Account Registration Validation Rules
+ * ***************************** */
+validation.registationRules = () => {
+    return [
+        // First name validation
+        body('account_firstname')
+            .trim()
+            .isLength({ min: 1, max: 50 })
+            .withMessage('First name is required and must be 50 characters or less.')
+            .matches(/^[a-zA-Z\s]+$/)
+            .withMessage('First name can only contain letters and spaces.'),
+
+        // Last name validation
+        body('account_lastname')
+            .trim()
+            .isLength({ min: 1, max: 50 })
+            .withMessage('Last name is required and must be 50 characters or less.')
+            .matches(/^[a-zA-Z\s]+$/)
+            .withMessage('Last name can only contain letters and spaces.'),
+
+        // Email validation
+        body('account_email')
+            .trim()
+            .isEmail()
+            .withMessage('Please provide a valid email address.')
+            .normalizeEmail(),
+
+        // Password validation
+        body('account_password')
+            .isLength({ min: 8 })
+            .withMessage('Password must be at least 8 characters long.')
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+            .withMessage('Password must contain at least one lowercase letter, one uppercase letter, and one number.')
+    ]
+}
+
+/* ******************************
+ * Account Update Validation Rules
+ * ***************************** */
+validation.accountUpdateRules = () => {
+    return [
+        // First name validation
+        body('account_firstname')
+            .trim()
+            .isLength({ min: 1, max: 50 })
+            .withMessage('First name is required and must be 50 characters or less.')
+            .matches(/^[a-zA-Z\s]+$/)
+            .withMessage('First name can only contain letters and spaces.'),
+
+        // Last name validation
+        body('account_lastname')
+            .trim()
+            .isLength({ min: 1, max: 50 })
+            .withMessage('Last name is required and must be 50 characters or less.')
+            .matches(/^[a-zA-Z\s]+$/)
+            .withMessage('Last name can only contain letters and spaces.'),
+
+        // Email validation
+        body('account_email')
+            .trim()
+            .isEmail()
+            .withMessage('Please provide a valid email address.')
+            .normalizeEmail()
+    ]
+}
+
+/* ******************************
+ * Password Update Validation Rules
+ * ***************************** */
+validation.passwordUpdateRules = () => {
+    return [
+        // Password validation
+        body('account_password')
+            .isLength({ min: 8 })
+            .withMessage('Password must be at least 8 characters long.')
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+            .withMessage('Password must contain at least one lowercase letter, one uppercase letter, and one number.')
+    ]
+}
+
+/* ******************************
  * Check validation results
  * ***************************** */
 validation.checkValidation = (req, res, next) => {

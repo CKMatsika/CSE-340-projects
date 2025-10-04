@@ -2,24 +2,16 @@ const express = require("express")
 const app = express()
 const static = require("./routes/static")
 const inventoryRoute = require("./routes/inventoryRoute")
+const accountRoute = require("./routes/accountRoute")
 const errorRoute = require("./routes/errorRoute")
 const bodyParser = require("body-parser")
-const session = require("express-session")
 const pool = require("./database")
+const cookieParser = require("cookie-parser")
 
 /* ***********************
  * Middleware
  * *********************** */
-app.use(session({
-    store: new (require('connect-pg-simple')(session))({
-        createTableIfMissing: true,
-        pool: pool,
-    }),
-    secret: process.env.SESSION_SECRET || 'defaultSecret',
-    resave: true,
-    saveUninitialized: true,
-    name: 'sessionId',
-}))
+app.use(cookieParser())
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -43,6 +35,9 @@ app.set("layout", "./layouts/layout")
  * Routes
  * *********************** */
 app.use("/", static)
+
+// Account routes
+app.use("/account", accountRoute)
 
 // Inventory routes
 app.use("/inv", inventoryRoute)

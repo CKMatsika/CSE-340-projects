@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const jwt = require("jsonwebtoken")
 const Util = {}
 
 /* ************************
@@ -127,3 +128,53 @@ Util.buildClassificationList = async function (classification_id = null) {
     classificationList += "</select>"
     return classificationList
 }
+
+/* ****************************************
+ * JWT Authentication Middleware
+ * *************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  const token = req.cookies.jwt
+
+  if (!token) {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'defaultSecret')
+    res.locals.accountData = decoded
+    next()
+  } catch (error) {
+    req.flash("notice", "Please log in.")
+    res.redirect("/account/login")
+  }
+}
+
+/* ****************************************
+ * JWT Authorization Middleware for Employee/Admin
+ * *************************************** */
+Util.requireEmployeeOrAdmin = (req, res, next) => {
+  const token = req.cookies.jwt
+
+  if (!token) {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'defaultSecret')
+
+    if (decoded.account_type === 'Employee' || decoded.account_type === 'Admin') {
+      res.locals.accountData = decoded
+      next()
+    } else {
+      req.flash("notice", "Access denied. Employee or Admin access required.")
+      return res.redirect("/account/login")
+    }
+  } catch (error) {
+    req.flash("notice", "Please log in.")
+    res.redirect("/account/login")
+  }
+}
+
+module.exports = Util
