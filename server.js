@@ -2,7 +2,7 @@ const app = require('./app.js');
 const initializeDatabase = require('./database/init.js');
 
 const port = process.env.PORT || 5500;
-const host = process.env.HOST || "localhost";
+const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : (process.env.HOST || "localhost");
 
 // Initialize database before starting server
 async function startServer() {
