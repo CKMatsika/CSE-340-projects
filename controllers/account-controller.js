@@ -201,6 +201,17 @@ async function updateAccount(req, res) {
     let nav = await utilities.getNav()
     const { account_id, account_firstname, account_lastname, account_email } = req.body
 
+    // Check if validation failed
+    if (res.locals.validationFailed) {
+        const accountData = await accountModel.getAccountById(account_id)
+        return res.render("account/update", {
+            title: "Update Account",
+            nav,
+            errors: res.locals.errors,
+            accountData,
+        })
+    }
+
     // Validate that account_id is provided
     if (!account_id) {
         req.flash("notice", "Account ID is required.")
@@ -213,8 +224,16 @@ async function updateAccount(req, res) {
         // Get current account data to check if it's the same account
         const currentAccount = await accountModel.getAccountById(account_id)
         if (currentAccount.account_email !== account_email) {
-            req.flash("notice", "Email address is already in use.")
-            return res.redirect(`/account/update/${account_id}`)
+            const accountData = await accountModel.getAccountById(account_id)
+            return res.render("account/update", {
+                title: "Update Account",
+                nav,
+                errors: [{ msg: "Email address is already in use." }],
+                accountData,
+                account_firstname,
+                account_lastname,
+                account_email,
+            })
         }
     }
 
@@ -235,8 +254,13 @@ async function updateAccount(req, res) {
 
         res.redirect("/account/management")
     } else {
-        req.flash("notice", "Sorry, the update failed.")
-        res.redirect(`/account/update/${account_id}`)
+        const accountData = await accountModel.getAccountById(account_id)
+        return res.render("account/update", {
+            title: "Update Account",
+            nav,
+            errors: [{ msg: "Sorry, the update failed." }],
+            accountData,
+        })
     }
 }
 
@@ -247,13 +271,29 @@ async function updatePassword(req, res) {
     let nav = await utilities.getNav()
     const { account_id, account_password } = req.body
 
+    // Check if validation failed
+    if (res.locals.validationFailed) {
+        const accountData = await accountModel.getAccountById(account_id)
+        return res.render("account/update", {
+            title: "Update Account",
+            nav,
+            passwordErrors: res.locals.errors,
+            accountData,
+        })
+    }
+
     // Hash the new password
     let hashedPassword
     try {
         hashedPassword = await bcrypt.hash(account_password, 10)
     } catch (error) {
-        req.flash("notice", 'Sorry, there was an error updating the password.')
-        return res.redirect(`/account/update/${account_id}`)
+        const accountData = await accountModel.getAccountById(account_id)
+        return res.render("account/update", {
+            title: "Update Account",
+            nav,
+            passwordErrors: [{ msg: 'Sorry, there was an error updating the password.' }],
+            accountData,
+        })
     }
 
     const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
@@ -262,8 +302,13 @@ async function updatePassword(req, res) {
         req.flash("notice", "Password updated successfully.")
         res.redirect("/account/management")
     } else {
-        req.flash("notice", "Sorry, the password update failed.")
-        res.redirect(`/account/update/${account_id}`)
+        const accountData = await accountModel.getAccountById(account_id)
+        return res.render("account/update", {
+            title: "Update Account",
+            nav,
+            passwordErrors: [{ msg: "Sorry, the password update failed." }],
+            accountData,
+        })
     }
 }
 

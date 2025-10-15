@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: cse340-app
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: false
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: cse340-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+
+  - type: pserv
+    name: cse340-db
+    env: postgres
+    databaseName: cse340db
+    user: cse340_user
+    ipAllowList: []

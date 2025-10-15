@@ -20,6 +20,26 @@ app.use(function(req, res, next){
     next()
 })
 
+// JWT Token Check Middleware - runs on every request
+app.use(async (req, res, next) => {
+    const token = req.cookies.jwt
+
+    if (token) {
+        try {
+            const jwt = require('jsonwebtoken')
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'defaultSecret')
+            res.locals.accountData = decoded
+        } catch (error) {
+            // Token is invalid, clear it
+            res.clearCookie('jwt')
+            res.locals.accountData = null
+        }
+    } else {
+        res.locals.accountData = null
+    }
+    next()
+})
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -52,9 +72,4 @@ app.use("/", errorRoute)
 const port = process.env.PORT || 5500
 const host = process.env.HOST || "localhost"
 
-/* ***********************
- * Log statement to confirm server operation
- *********************** */
-app.listen(port, () => {
-    console.log(`app listening on ${host}:${port}`)
-})
+module.exports = app
